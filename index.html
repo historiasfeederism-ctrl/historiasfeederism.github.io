@@ -12,7 +12,7 @@
     <div id="intro-screen">
         <div class="matrix-bg" id="matrix-bg"></div>
         <div class="jarrett-intro" id="jarrett-trigger">
-            <img src="../Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett">
+            <img src="Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett">
         </div>
         <div class="intro-text">[ Click para acceder ]</div>
     </div>
@@ -49,19 +49,19 @@
             <div class="cards-grid">
                 <a href="personajes/natasha.html" class="card">
                     <span class="card-tag">STREAMER</span>
-                    <img src="../NatashaFelizOjosabiertosBocaCerrada.png" alt="Natasha Larda" class="card-img">
+                    <img src="NatashaFelizOjosabiertosBocaCerrada.png" alt="Natasha Larda" class="card-img">
                     <h3>Natasha Larda</h3>
                     <p>620 kg / Inmóvil</p>
                 </a>
                 <a href="personajes/bertozzi.html" class="card">
                     <span class="card-tag">IA</span>
-                    <img src="../Bertozzi.png" alt="Bertozzi" class="card-img">
+                    <img src="Bertozzi.png" alt="Bertozzi" class="card-img">
                     <h3>Bertozzi</h3>
                     <p>Inteligencia Artificial</p>
                 </a>
                 <a href="personajes/jarrett.html" class="card">
                     <span class="card-tag">ARTISTA</span>
-                    <img src="../Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett" class="card-img">
+                    <img src="Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett" class="card-img">
                     <h3>Jarrett</h3>
                     <p>Cefalón / Ilustrador</p>
                 </a>
@@ -294,6 +294,42 @@
     </div>
 
     <script>
+        // ===== INTRO LOGIC WITH HISTORY FIX =====
+        const intro = document.getElementById('intro-screen');
+        const main = document.getElementById('main-content');
+        const trigger = document.getElementById('jarrett-trigger');
+        const INTRO_KEY = 'hf_intro_seen';
+
+        // Check if user already saw intro this session (using sessionStorage)
+        // or if they came back via back button (URL hash)
+        function shouldSkipIntro() {
+            return sessionStorage.getItem(INTRO_KEY) === 'true' || window.location.hash === '#main';
+        }
+
+        function reveal() {
+            intro.classList.add('hidden');
+            main.classList.add('visible');
+            document.body.style.overflow = 'auto';
+            sessionStorage.setItem(INTRO_KEY, 'true');
+            // Replace state so back button doesn't bring back intro
+            if (history.replaceState) {
+                history.replaceState({introSkipped: true}, '', window.location.pathname + '#main');
+            }
+        }
+
+        // Skip intro if already seen
+        if (shouldSkipIntro()) {
+            intro.style.display = 'none';
+            main.style.opacity = '1';
+            main.style.transform = 'translateY(0)';
+            document.body.style.overflow = 'auto';
+        } else {
+            trigger.addEventListener('click', reveal);
+            intro.addEventListener('click', (e) => {
+                if (e.target === intro || e.target.className === 'intro-text') reveal();
+            });
+        }
+
         // Matrix rain effect
         const matrixBg = document.getElementById('matrix-bg');
         const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
@@ -305,7 +341,6 @@
             col.style.animationDuration = (8 + Math.random() * 12) + 's';
             col.style.animationDelay = (Math.random() * 10) + 's';
             col.style.fontSize = (10 + Math.random() * 6) + 'px';
-
             let text = '';
             for (let j = 0; j < 40; j++) {
                 text += chars[Math.floor(Math.random() * chars.length)];
@@ -314,20 +349,14 @@
             matrixBg.appendChild(col);
         }
 
-        // Reveal transition
-        const intro = document.getElementById('intro-screen');
-        const main = document.getElementById('main-content');
-        const trigger = document.getElementById('jarrett-trigger');
-
-        function reveal() {
-            intro.classList.add('hidden');
-            main.classList.add('visible');
-            document.body.style.overflow = 'auto';
-        }
-
-        trigger.addEventListener('click', reveal);
-        intro.addEventListener('click', (e) => {
-            if (e.target === intro || e.target.className === 'intro-text') reveal();
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
 
         // Scroll observer for timeline
