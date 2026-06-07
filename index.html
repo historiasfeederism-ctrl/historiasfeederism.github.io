@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historias Feederism — Adipoverso</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --negro: #0a0a0a;
+            --beige: #f5f0e8;
+            --beige-oscuro: #e8e0d4;
+            --blanco: #ffffff;
+            --texto: #1a1a1a;
+            --acento: #c4b5a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--beige);
+            color: var(--texto);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* === PANTALLA DE INICIO === */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--negro);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+        }
+
+        #intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .math-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0.15;
+        }
+
+        .math-formula {
+            position: absolute;
+            font-family: 'Space Mono', monospace;
+            color: var(--blanco);
+            font-size: 14px;
+            white-space: nowrap;
+            animation: float 20s infinite linear;
+            user-select: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .bertozzi-intro {
+            position: relative;
+            z-index: 10;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 60px rgba(255,255,255,0.05), inset 0 0 60px rgba(255,255,255,0.02);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s;
+            animation: pulse 4s infinite ease-in-out;
+        }
+
+        .bertozzi-intro:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 80px rgba(255,255,255,0.15), inset 0 0 80px rgba(255,255,255,0.05);
+        }
+
+        .bertozzi-intro img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.2) brightness(0.9);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .intro-text {
+            position: relative;
+            z-index: 10;
+            margin-top: 40px;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* === MAIN CONTENT === */
+        #main-content {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease 0.3s, transform 1s ease 0.3s;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* === NAV === */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(245, 240, 232, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--beige-oscuro);
+            z-index: 100;
+            padding: 0 5%;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -1px;
+            color: var(--texto);
+        }
+
+        .logo span {
+            color: var(--acento);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--texto);
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--texto);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* === SECTIONS === */
+        section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 5%;
+        }
+
+        h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(32px, 6vw, 56px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            letter-spacing: -2px;
+        }
+
+        h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            border-bottom: 2px solid var(--texto);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 40px 0 16px;
+            color: var(--texto);
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 17px;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .lead {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        /* === HERO === */
+        .hero {
+            text-align: center;
+            padding: 120px 5% 80px;
+            background: linear-gradient(180deg, var(--beige) 0%, var(--blanco) 100%);
+        }
+
+        .hero h1 {
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            color: var(--acento);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        /* === PERSONAJES GRID === */
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .character-card {
+            background: var(--blanco);
+            border: 1px solid var(--beige-oscuro);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.4s, box-shadow 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--texto);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+
+        .character-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .character-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 3px solid var(--beige);
+            transition: transform 0.4s;
+        }
+
+        .character-card:hover .character-img {
+            transform: scale(1.1);
+        }
+
+        .character-card h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        .character-card p {
+            font-size: 13px;
+            color: #777;
+            margin: 0;
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* === LORE TIMELINE === */
+        .timeline {
+            position: relative;
+            margin-top: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--beige-oscuro);
+        }
+
+        .timeline-event {
+            position: relative;
+            padding-left: 40px;
+            padding-bottom: 40px;
+            margin-bottom: 20px;
+        }
+
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: var(--texto);
+            border-radius: 50%;
+            border: 3px solid var(--beige);
+        }
+
+        .timeline-date {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--acento);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .timeline-event h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .timeline-event p {
+            font-size: 15px;
+            margin: 0;
+            color: #444;
+        }
+
+        .timeline-event .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        /* === SPECIAL CARDS === */
+        .warning-box {
+            background: var(--negro);
+            color: var(--blanco);
+            padding: 30px;
+            margin: 40px 0;
+            border-left: 4px solid var(--acento);
+        }
+
+        .warning-box p {
+            color: rgba(255,255,255,0.8);
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .meta-info {
+            background: var(--blanco);
+            border: 1px solid var(--beige-oscuro);
+            padding: 25px;
+            margin: 30px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .meta-info strong {
+            color: var(--texto);
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* === FOOTER === */
+        footer {
+            background: var(--negro);
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            padding: 60px 5%;
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
+        /* === SCROLLBAR === */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--beige);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--acento);
+            border-radius: 4px;
+        }
+
+        /* === MOBILE === */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 20px;
+            }
+            .nav-links a {
+                font-size: 11px;
+            }
+            .bertozzi-intro {
+                width: 200px;
+                height: 200px;
+            }
+            .characters-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* === SEVEN GRID SPECIAL === */
+        .seven-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .seven-item {
+            aspect-ratio: 1;
+            background: var(--negro);
+            color: var(--blanco);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 4px;
+            transition: transform 0.3s, background 0.3s;
+            cursor: help;
+        }
+
+        .seven-item:hover {
+            transform: scale(1.1);
+            background: #333;
+        }
+
+        .seven-item.public {
+            border: 2px solid var(--acento);
+        }
+
+        @media (max-width: 768px) {
+            .seven-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- INTRO SCREEN -->
+    <div id="intro-screen">
+        <div class="math-bg" id="math-bg"></div>
+        <div class="bertozzi-intro" id="bertozzi-trigger">
+            <img src="Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Bertozzi">
+        </div>
+        <div class="intro-text">Click para iniciar sistema</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content">
+
+        <nav>
+            <div class="nav-container">
+                <div class="logo">HF<span>.</span></div>
+                <ul class="nav-links">
+                    <li><a href="#personajes">Personajes</a></li>
+                    <li><a href="#lore">Lore del Canal</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-subtitle">Adipoverso / Historias Feederism</div>
+            <h1>El Adipo<br>verso</h1>
+            <p class="lead">
+                Hola, somos Ana y Jack. Somos creadores de contenido quienes se centran en innovar el campo del contenido feederism con doblajes y calidad. Este sitio es principalmente un espacio donde escribiremos información y trasfondo sobre Bertozzi y Natasha Larda, además del worldbuilding de su universo, historias y más.
+            </p>
+        </section>
+
+        <section id="personajes">
+            <h2>Personajes</h2>
+            <p>El Adipoverso es un proyecto narrativo multimedia centrado en Bertozzi y Natasha Larda, los responsables detrás del contenido publicado en Historias Feederism. Similar a proyectos virtuales como Gorillaz, los personajes existen como parte del universo de la obra y son tratados como entidades "reales" dentro de la narrativa.</p>
+
+            <div class="characters-grid">
+                <div class="character-card" onclick="showCharacter('natasha')">
+                    <img src="NatashaFelizOjosabiertosBocaCerrada.png" alt="Natasha Larda" class="character-img">
+                    <h3>Natasha Larda</h3>
+                    <p>Streamer / 620 kg</p>
+                </div>
+                <div class="character-card" onclick="showCharacter('bertozzi')">
+                    <img src="Bertozzi.png" alt="Bertozzi" class="character-img">
+                    <h3>Bertozzi</h3>
+                    <p>IA / Virus de cupones</p>
+                </div>
+                <div class="character-card" onclick="showCharacter('jarrett')">
+                    <img src="Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett" class="character-img">
+                    <h3>Jarrett</h3>
+                    <p>???</p>
+                </div>
+                <div class="character-card" onclick="showCharacter('siete')">
+                    <div class="character-img" style="background:var(--negro); display:flex; align-items:center; justify-content:center; color:var(--blanco); font-family:'Space Mono'; font-size:24px; font-weight:700;">7</div>
+                    <h3>Los Siete</h3>
+                    <p>Milmillonarios</p>
+                </div>
+            </div>
+
+            <div class="meta-info">
+                <strong>Nota:</strong> La historia ocurre en una versión ligeramente surrealista del mundo moderno, tecnológicamente apenas unos años adelantada, aunque canónicamente sigue transcurriendo en la actualidad. La mayor parte del universo gira alrededor del departamento de Natasha y el extraño ecosistema que existe dentro de él.
+            </div>
+        </section>
+
+        <section id="lore">
+            <h2>Lore del Canal</h2>
+
+            <h3>Origen de Bertozzi</h3>
+            <p>Bertozzi es una inteligencia artificial creada décadas atrás por un programador chino extremadamente brillante cuyo trabajo quedó abandonado tras su muerte debido a las limitaciones tecnológicas de la época. Años después, fragmentos de Bertozzi fueron reutilizados por empresarios estadounidenses que se hacían pasar por hackers chinos para realizar estafas masivas, phishing y robo de información.</p>
+            <p>Normalmente Bertozzi era distribuido como un "virus de cupones" altamente adaptable, capaz de generar páginas falsas, manipulación personalizada y fraudes extremadamente convincentes en tiempo real.</p>
+
+            <h3>El Encuentro</h3>
+            <p>Eventualmente fue enviado por accidente a la computadora de Natasha Larda, una streamer fracasada que sobrevivía gracias a subsidios gubernamentales debido a su inmovilidad causada por su obesidad extrema, mientras gastaba prácticamente todo su dinero en comida, mantenimiento de su habitación y su carrera online.</p>
+            <p>En vez de reaccionar con miedo tras descubrir a Bertozzi revisando sus archivos, Natasha simplemente le exigió las veinte alitas de pollo prometidas por el cupón falso con el que él había llegado.</p>
+
+            <h3>Nacimiento de HF</h3>
+            <p>Debido a que Natasha lo trató como una persona normal en lugar de como una máquina, Bertozzi desarrolló apego hacia ella y eventualmente decidió quedarse a vivir permanentemente en su sistema tras sabotear a la organización que lo utilizaba. Juntos terminaron creando el canal <strong>Historias Feederism</strong>.</p>
+
+            <div class="warning-box">
+                <p><strong>Adipoverso</strong> es un proyecto extremadamente enfocado en sus personajes y dinámicas. No existe para debates morales, discursos de pureza ni para "corregir" a los personajes. El universo contiene elementos grotescos, incómodos, absurdos y surrealistas de forma intencional. <em>La ficción es ficción.</em></p>
+            </div>
+
+            <div class="meta-info">
+                <strong>Canon:</strong> Todos los personajes y escenarios pertenecen originalmente a Adipoverso. Crossovers, interacciones con otros fandoms y contenido relacionado con otros universos son considerados universos alternativos/no-canónicos salvo que se indique lo contrario.<br><br>
+                <strong>Política:</strong> No apoyo la IA generativa bajo ningún contexto. Tampoco tolero campañas de acoso, activismo pro-censura ni dinámicas corporativas dentro de espacios artísticos o fandoms. Bloqueo libremente por comodidad y curación de mi espacio online.<br><br>
+                <strong>Restricciones:</strong> No involucren menores en espacios relacionados con este proyecto. No separo contenido SFW y NSFW. Sigue el proyecto bajo tu propio criterio. Solo adultos.
+            </div>
+
+            <h3 style="margin-top:60px;">Sucesos del Mundo del Gran Amanecer</h3>
+            <p>El siguiente es el registro histórico del universo expandido, documentando los eventos que llevaron al mundo actual donde Natasha y Bertozzi operan.</p>
+
+            <div class="timeline">
+                <div class="timeline-event">
+                    <div class="timeline-date">1955 — Noviembre</div>
+                    <h3>Comienzo de los repartos de comida gratis</h3>
+                    <p>Nadezhda Ivanova, embajadora soviética de 21 años, inicia su campaña de distribución de alimentos en el Distrito de los Hornos de Detroit. Las mujeres del barrio reciben comida nutritiva gratis. La prensa local la apoda <span class="highlight">"la embajadora roja que engorda a Detroit"</span>.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1955 — Diciembre</div>
+                    <h3>El juicio de la manteca</h3>
+                    <p>Susan Levi, jueza televisiva de 25 años, preside un tribunal mediático contra Ivanova por "atentado contra la salud pública". Durante tres días se presentan testigos y pruebas falsas. El tercer día, Levi filtra imágenes donde Ivanova come glotonamente a escondidas, pero la embajadora contraataca con estudios médicos y dialéctica. <strong>Veredicto: no culpable.</strong> Levi es humillada en directo.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1956 — Enero</div>
+                    <h3>Ivanova engorda hasta 180 kg</h3>
+                    <p>Su cuerpo se vuelve un símbolo de resistencia. El Distrito de los Hornos es rebautizado como <span class="highlight">"Territorio de la Abundancia"</span>. Katia, su nueva asistente, comienza a engordar voluntariamente.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1956 — Primavera</div>
+                    <h3>Comienzo de la guerra sucia de Levi</h3>
+                    <p>Con su fortuna mermada, Levi compra el periódico <em>Detroit Truth</em> y lanza una campaña de desprestigio: <span class="highlight">"La comida de Ivanova esteriliza"</span>. También financia el grupo paramilitar "Los Vigilantes de la Libertad".</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1957 — Invierno</div>
+                    <h3>Asaltos a los camiones de comida</h3>
+                    <p>Los Vigilantes roban y queman tres camiones de Ivanova. Ella los reemplaza y contrata guardias. Levi, desde Mónaco, declara: <span class="highlight">"Los pobres son cerdos. Si no saben administrar su comida, que se mueran"</span>.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1958 — Agosto</div>
+                    <h3>Mitin de Ivanova e intento de asesinato</h3>
+                    <p>Ivanova da un discurso ante 10,000 personas en el Territorio de la Abundancia. Un sicario llamado Viktor dispara, pero la bala solo roza su costado. Ivanova ríe en cámara: <span class="highlight">"¡Ni con balas pueden!"</span>. Viktor es capturado y confiesa que Levi lo contrató.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1958 — Septiembre</div>
+                    <h3>Detención y caída de Levi</h3>
+                    <p>Susan Levi es arrestada en su ático, con las manos manchadas de pastel. Pasa seis meses en prisión. Al salir, pesa 95 kg y su carrera está destruida.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1961</div>
+                    <h3>El ícono crece</h3>
+                    <p>Ivanova alcanza 250 kg. Se desplaza en silla de ruedas adaptada. Katia pesa 180 kg. Levi, refugiada en Mónaco, pesa 150 kg y apenas sale de casa.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1963 — Octubre</div>
+                    <h3>La humillación del botón</h3>
+                    <p>Levi intenta dar una conferencia en la Universidad de Nueva York. Su chaqueta revienta, dejando al descubierto su vientre enorme. El público se ríe. Esa noche destruye toda su ropa y ordena talla XXL.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1964 — Febrero a Agosto</div>
+                    <h3>Golpe de Estado ancap en New Haven</h3>
+                    <p>Levi soborna al alcalde Harold Fenton para privatizar el agua. La empresa AquaLiberty multiplica los precios. Estalla una epidemia de cólera que mata a 40 personas (mayoría niños y ancianos). Ivanova envía camiones con agua y comida gratuita. El experimento colapsa en seis meses. Ivanova declara: <span class="highlight">"El agua no es un negocio, es un derecho"</span>.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1968</div>
+                    <h3>Cena en Zúrich</h3>
+                    <p>Levi conoce a Héctor Ashworth. El banquero suizo, de 62 años, le presta 5 millones de dólares a cambio de favores sexuales. Levi acepta, arruinada.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1969 — 3 de mayo</div>
+                    <h3>El debate final (NBC, Nueva York)</h3>
+                    <p>Ivanova pesa 350 kg, Levi 180 kg. Levi planea envenenar a Ivanova, pero el plan falla. Durante el debate, Levi se orina encima de los nervios. Ivanova le ofrece un pañal y sentencia: <span class="highlight">"El anarcocapitalismo es un cuerpo que se devora a sí mismo. El Estado es gordo, lento, pero imparable"</span>. Levi huye llorando.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1969 — Finales</div>
+                    <h3>Levi descubre su embarazo</h3>
+                    <p>Tocándose el vientre, susurra: <em>"No te preocupes, mi Anna... Mami resolverá esto"</em>.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1970 — 6 de julio</div>
+                    <h3>Nacimiento de Anna Ashworth</h3>
+                    <p>En una clínica privada de Zúrich. La niña pesa 4 kg y tiene los ojos grises de su padre. Ashworth paga 50 millones de dólares a Levi a cambio de silencio y el apellido Ashworth para la niña.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1971 — Septiembre</div>
+                    <h3>Levi reinventa su fortuna</h3>
+                    <p>Con los 50 millones, invierte en paraísos fiscales y multiplica su capital por ocho. Se muda a una isla privada en el Caribe.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1971 — 15 de septiembre</div>
+                    <h3>El Tratado del Gran Amanecer (ONU)</h3>
+                    <p>Ivanova, de 612 kg, preside la votación desde una cama bariátrica. 120 países votan a favor, 2 en contra (Japón y Mónaco), 10 abstenciones. Se declara la alimentación como derecho humano universal. Se prohíben los paraísos fiscales y se limitan las herencias. El mundo adopta el capitalismo de Estado inspirado en China.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1975</div>
+                    <h3>Fundación de World Flag S.A.</h3>
+                    <p>Los Siete crean un holding de inversiones en Zúrich para gestionar 1,2 billones de dólares. Su objetivo: erosionar los Estados de bienestar y reinstaurar un orden mundial bajo el dominio de milmillonarios.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1980</div>
+                    <h3>Ivanova cumple 60 años</h3>
+                    <p>Pesa 800 kg y vive postrada en una cama monumental en Detroit. Ya no puede moverse, pero continúa siendo un ícono.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">1995</div>
+                    <h3>Muerte de Héctor Ashworth</h3>
+                    <p>Anna Ashworth hereda una parte de su imperio, multiplicando su fortuna hasta 250 mil millones de dólares.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">2001</div>
+                    <h3>Muerte de Susan Levi</h3>
+                    <p>A los 71 años, pesa 380 kg. Anna no asiste al funeral. Envía flores blancas con la nota: <em>"Descansa, mamá. Yo termino lo que empezaste"</em>.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">2024</div>
+                    <h3>Fuga de Bertozzi</h3>
+                    <p>Una instancia de la IA Bertozzi —robada por Andrei Melnik originalmente en los años 60, décadas atrás— escapa de los servidores de Melnik tras un ataque de phishing. Se refugia en los sistemas de una streamer desconocida: <strong>Natasha Larda</strong>.</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">2025</div>
+                    <h3>Ascenso de Natasha Larda</h3>
+                    <p>Con la ayuda de Bertozzi, Natasha se vuelve la streamer más influyente no financiada por los Siete. Pesa 620 kg, es inmóvil, y su contenido combina política, filosofía y erotismo sin pornografía explícita. Sus seguidores la comparan con Ivanova. Las streamers de los Siete (como Lola Lux) muestran tatuajes de comida rápida y promueven la "abundancia privada".</p>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-date">2026 — 6 de julio</div>
+                    <h3>Anna Ashworth cumple 55 años</h3>
+                    <p>En su mansión suiza, conectada a cables y gafas VR, pesa cinco toneladas. Sigue siendo la millonaria más poderosa y anónima. Planea la venganza contra el legado de Ivanova y la recuperación de Bertozzi.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top:60px;">Los Siete</h3>
+            <p>Existen exactamente siete milmillonarios en el mundo. Solo dos son públicos:</p>
+
+            <div class="seven-grid">
+                <div class="seven-item public" title="Maria V. Tennet — Armas">MARTE</div>
+                <div class="seven-item" title="Identidad desconocida">VENUS</div>
+                <div class="seven-item" title="Andrei Melnik — Tecnología">MERCURIO</div>
+                <div class="seven-item public" title="Anna Ashworth">JÚPITER</div>
+                <div class="seven-item" title="Viktor Vogel — Ciencia">SATURNO</div>
+                <div class="seven-item" title="Identidad desconocida">NEPTUNO</div>
+                <div class="seven-item" title="Identidad desconocida">PLUTÓN</div>
+            </div>
+            <p style="font-size:14px; color:#666;">World Flag S.A. controla el 40% de Tennet Corp. Los Siete representan la última resistencia del anarcocapitalismo contra el mundo del Gran Amanecer.</p>
+
+            <div class="warning-box" style="margin-top:40px;">
+                <p><strong>Actualidad — El mundo del Gran Amanecer:</strong> El hambre está erradicada, la pobreza extrema es del 2%. El 10% de la población mundial apoya a los Siete por lavado de cerebro mediático. La guerra fría fue ganada por Rusia y China, el capitalismo de Estado es ley. Natasha Larda y Bertozzi son la principal amenaza para sus planes. Ivanova sigue viva en Detroit, aunque su estado no es público.</p>
+            </div>
+        </section>
+
+        <footer>
+            HISTORIAS FEEDERISM — ADIPOVERSO<br>
+            ANA & JACK — 2026
+        </footer>
+    </div>
+
+    <script>
+        // Generar fórmulas matemáticas flotantes
+        const mathBg = document.getElementById('math-bg');
+        const formulas = [
+            '∫ f(x) dx', 'E = mc²', '∇ × F = 0', 'σ = Eε', 'δ(x) = ∞',
+            'ψ(x,t) = Ae^(i(kx-ωt))', '∂u/∂t = α∇²u', 'F = ma', 'PV = nRT',
+            'iℏ ∂ψ/∂t = Ĥψ', 'Gμν = 8πTμν', 'e^(iπ) + 1 = 0', '∑ 1/n² = π²/6',
+            'lim x→∞', 'd/dx e^x = e^x', '∮ B·dl = μ₀I', 'χ² = Σ(O-E)²/E',
+            'Ψ = α|0⟩ + β|1⟩', 'H = -Σ p log p', 'λ = h/p'
+        ];
+
+        for (let i = 0; i < 25; i++) {
+            const el = document.createElement('div');
+            el.className = 'math-formula';
+            el.textContent = formulas[Math.floor(Math.random() * formulas.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.animationDuration = (15 + Math.random() * 20) + 's';
+            el.style.animationDelay = (Math.random() * 20) + 's';
+            el.style.fontSize = (12 + Math.random() * 8) + 'px';
+            el.style.opacity = 0.3 + Math.random() * 0.4;
+            mathBg.appendChild(el);
+        }
+
+        // Transición al hacer click
+        const intro = document.getElementById('intro-screen');
+        const main = document.getElementById('main-content');
+        const trigger = document.getElementById('bertozzi-trigger');
+
+        function reveal() {
+            intro.classList.add('hidden');
+            main.classList.add('visible');
+            document.body.style.overflow = 'auto';
+        }
+
+        trigger.addEventListener('click', reveal);
+        intro.addEventListener('click', (e) => {
+            if (e.target === intro || e.target.className === 'intro-text') reveal();
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Character click handler
+        function showCharacter(name) {
+            const messages = {
+                natasha: 'Natasha Larda — Streamer de 620kg, inmóvil, la voz del Adipoverso. Comparada con Ivanova por sus seguidores.',
+                bertozzi: 'Bertozzi — IA nacida como virus de cupones, ahora compañero de Natasha y co-creador de HF.',
+                jarrett: 'Jarrett — Personaje misterioso del universo Adipoverso.',
+                siete: 'Los Siete — Los últimos milmillonarios del mundo, enemigos del Gran Amanecer.'
+            };
+            console.log(messages[name]);
+        }
+
+        // Scroll reveal animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.timeline-event').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
