@@ -4,523 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historias Feederism — Adipoverso</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --negro: #0a0a0a;
-            --beige: #f5f0e8;
-            --beige-oscuro: #e8e0d4;
-            --blanco: #ffffff;
-            --texto: #1a1a1a;
-            --acento: #c4b5a0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--beige);
-            color: var(--texto);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        /* === PANTALLA DE INICIO === */
-        #intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--negro);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
-        }
-
-        #intro-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .math-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            opacity: 0.15;
-        }
-
-        .math-formula {
-            position: absolute;
-            font-family: 'Space Mono', monospace;
-            color: var(--blanco);
-            font-size: 14px;
-            white-space: nowrap;
-            animation: float 20s infinite linear;
-            user-select: none;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-
-        .bertozzi-intro {
-            position: relative;
-            z-index: 10;
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.1);
-            box-shadow: 0 0 60px rgba(255,255,255,0.05), inset 0 0 60px rgba(255,255,255,0.02);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s;
-            animation: pulse 4s infinite ease-in-out;
-        }
-
-        .bertozzi-intro:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 80px rgba(255,255,255,0.15), inset 0 0 80px rgba(255,255,255,0.05);
-        }
-
-        .bertozzi-intro img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: contrast(1.2) brightness(0.9);
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        .intro-text {
-            position: relative;
-            z-index: 10;
-            margin-top: 40px;
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            animation: blink 2s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        /* === MAIN CONTENT === */
-        #main-content {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 1s ease 0.3s, transform 1s ease 0.3s;
-        }
-
-        #main-content.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* === NAV === */
-        nav {
-            position: sticky;
-            top: 0;
-            background: rgba(245, 240, 232, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--beige-oscuro);
-            z-index: 100;
-            padding: 0 5%;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-
-        .logo {
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: -1px;
-            color: var(--texto);
-        }
-
-        .logo span {
-            color: var(--acento);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--texto);
-            font-weight: 600;
-            font-size: 13px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            position: relative;
-            padding: 5px 0;
-            transition: color 0.3s;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--texto);
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* === SECTIONS === */
-        section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 80px 5%;
-        }
-
-        h1 {
-            font-family: 'Space Mono', monospace;
-            font-size: clamp(32px, 6vw, 56px);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 30px;
-            letter-spacing: -2px;
-        }
-
-        h2 {
-            font-family: 'Space Mono', monospace;
-            font-size: clamp(24px, 4vw, 36px);
-            font-weight: 700;
-            margin-bottom: 24px;
-            letter-spacing: -1px;
-            border-bottom: 2px solid var(--texto);
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-
-        h3 {
-            font-family: 'Space Mono', monospace;
-            font-size: 20px;
-            font-weight: 700;
-            margin: 40px 0 16px;
-            color: var(--texto);
-        }
-
-        p {
-            margin-bottom: 20px;
-            font-size: 17px;
-            line-height: 1.7;
-            color: #333;
-        }
-
-        .lead {
-            font-size: 20px;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 40px;
-            font-weight: 300;
-        }
-
-        /* === HERO === */
-        .hero {
-            text-align: center;
-            padding: 120px 5% 80px;
-            background: linear-gradient(180deg, var(--beige) 0%, var(--blanco) 100%);
-        }
-
-        .hero h1 {
-            margin-bottom: 20px;
-        }
-
-        .hero-subtitle {
-            font-family: 'Space Mono', monospace;
-            font-size: 14px;
-            color: var(--acento);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-        }
-
-        /* === PERSONAJES GRID === */
-        .characters-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .character-card {
-            background: var(--blanco);
-            border: 1px solid var(--beige-oscuro);
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.4s, box-shadow 0.4s;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .character-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--texto);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s;
-        }
-
-        .character-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .character-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-        }
-
-        .character-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 20px;
-            border: 3px solid var(--beige);
-            transition: transform 0.4s;
-        }
-
-        .character-card:hover .character-img {
-            transform: scale(1.1);
-        }
-
-        .character-card h3 {
-            margin: 0 0 8px;
-            font-size: 18px;
-        }
-
-        .character-card p {
-            font-size: 13px;
-            color: #777;
-            margin: 0;
-            font-family: 'Space Mono', monospace;
-        }
-
-        /* === LORE TIMELINE === */
-        .timeline {
-            position: relative;
-            margin-top: 40px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 2px;
-            height: 100%;
-            background: var(--beige-oscuro);
-        }
-
-        .timeline-event {
-            position: relative;
-            padding-left: 40px;
-            padding-bottom: 40px;
-            margin-bottom: 20px;
-        }
-
-        .timeline-event::before {
-            content: '';
-            position: absolute;
-            left: -5px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            background: var(--texto);
-            border-radius: 50%;
-            border: 3px solid var(--beige);
-        }
-
-        .timeline-date {
-            font-family: 'Space Mono', monospace;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--acento);
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        .timeline-event h3 {
-            margin: 0 0 10px;
-            font-size: 18px;
-        }
-
-        .timeline-event p {
-            font-size: 15px;
-            margin: 0;
-            color: #444;
-        }
-
-        .timeline-event .highlight {
-            background: #fff3cd;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: 600;
-        }
-
-        /* === SPECIAL CARDS === */
-        .warning-box {
-            background: var(--negro);
-            color: var(--blanco);
-            padding: 30px;
-            margin: 40px 0;
-            border-left: 4px solid var(--acento);
-        }
-
-        .warning-box p {
-            color: rgba(255,255,255,0.8);
-            margin: 0;
-            font-size: 15px;
-        }
-
-        .meta-info {
-            background: var(--blanco);
-            border: 1px solid var(--beige-oscuro);
-            padding: 25px;
-            margin: 30px 0;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .meta-info strong {
-            color: var(--texto);
-            font-family: 'Space Mono', monospace;
-        }
-
-        /* === FOOTER === */
-        footer {
-            background: var(--negro);
-            color: rgba(255,255,255,0.4);
-            text-align: center;
-            padding: 60px 5%;
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            letter-spacing: 2px;
-        }
-
-        /* === SCROLLBAR === */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--beige);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--acento);
-            border-radius: 4px;
-        }
-
-        /* === MOBILE === */
-        @media (max-width: 768px) {
-            .nav-links {
-                gap: 20px;
-            }
-            .nav-links a {
-                font-size: 11px;
-            }
-            .bertozzi-intro {
-                width: 200px;
-                height: 200px;
-            }
-            .characters-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        /* === SEVEN GRID SPECIAL === */
-        .seven-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-            text-align: center;
-        }
-
-        .seven-item {
-            aspect-ratio: 1;
-            background: var(--negro);
-            color: var(--blanco);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 4px;
-            transition: transform 0.3s, background 0.3s;
-            cursor: help;
-        }
-
-        .seven-item:hover {
-            transform: scale(1.1);
-            background: #333;
-        }
-
-        .seven-item.public {
-            border: 2px solid var(--acento);
-        }
-
-        @media (max-width: 768px) {
-            .seven-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- INTRO SCREEN -->
     <div id="intro-screen">
-        <div class="math-bg" id="math-bg"></div>
-        <div class="bertozzi-intro" id="bertozzi-trigger">
-            <img src="Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Bertozzi">
+        <div class="matrix-bg" id="matrix-bg"></div>
+        <div class="jarrett-intro" id="jarrett-trigger">
+            <img src="../Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett">
         </div>
-        <div class="intro-text">Click para iniciar sistema</div>
+        <div class="intro-text">[ Click para acceder ]</div>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -528,10 +22,11 @@
 
         <nav>
             <div class="nav-container">
-                <div class="logo">HF<span>.</span></div>
+                <a href="index.html" class="logo">HF<span>.</span></a>
                 <ul class="nav-links">
                     <li><a href="#personajes">Personajes</a></li>
-                    <li><a href="#lore">Lore del Canal</a></li>
+                    <li><a href="#lore">Lore</a></li>
+                    <li><a href="#redes">Redes</a></li>
                 </ul>
             </div>
         </nav>
@@ -545,42 +40,52 @@
         </section>
 
         <section id="personajes">
-            <h2>Personajes</h2>
+            <div class="section-header">
+                <span class="section-num">01</span>
+                <h2>Personajes</h2>
+            </div>
             <p>El Adipoverso es un proyecto narrativo multimedia centrado en Bertozzi y Natasha Larda, los responsables detrás del contenido publicado en Historias Feederism. Similar a proyectos virtuales como Gorillaz, los personajes existen como parte del universo de la obra y son tratados como entidades "reales" dentro de la narrativa.</p>
 
-            <div class="characters-grid">
-                <div class="character-card" onclick="showCharacter('natasha')">
-                    <img src="NatashaFelizOjosabiertosBocaCerrada.png" alt="Natasha Larda" class="character-img">
+            <div class="cards-grid">
+                <a href="personajes/natasha.html" class="card">
+                    <span class="card-tag">STREAMER</span>
+                    <img src="../NatashaFelizOjosabiertosBocaCerrada.png" alt="Natasha Larda" class="card-img">
                     <h3>Natasha Larda</h3>
-                    <p>Streamer / 620 kg</p>
-                </div>
-                <div class="character-card" onclick="showCharacter('bertozzi')">
-                    <img src="Bertozzi.png" alt="Bertozzi" class="character-img">
+                    <p>620 kg / Inmóvil</p>
+                </a>
+                <a href="personajes/bertozzi.html" class="card">
+                    <span class="card-tag">IA</span>
+                    <img src="../Bertozzi.png" alt="Bertozzi" class="card-img">
                     <h3>Bertozzi</h3>
-                    <p>IA / Virus de cupones</p>
-                </div>
-                <div class="character-card" onclick="showCharacter('jarrett')">
-                    <img src="Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett" class="character-img">
+                    <p>Inteligencia Artificial</p>
+                </a>
+                <a href="personajes/jarrett.html" class="card">
+                    <span class="card-tag">ARTISTA</span>
+                    <img src="../Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett" class="card-img">
                     <h3>Jarrett</h3>
-                    <p>???</p>
-                </div>
-                <div class="character-card" onclick="showCharacter('siete')">
-                    <div class="character-img" style="background:var(--negro); display:flex; align-items:center; justify-content:center; color:var(--blanco); font-family:'Space Mono'; font-size:24px; font-weight:700;">7</div>
+                    <p>Cefalón / Ilustrador</p>
+                </a>
+                <a href="los7/index.html" class="card">
+                    <span class="card-tag">ANTAGONISTAS</span>
+                    <div class="card-img" style="background:var(--negro); display:flex; align-items:center; justify-content:center; color:var(--blanco); font-family:'JetBrains Mono'; font-size:28px; font-weight:800;">7</div>
                     <h3>Los Siete</h3>
-                    <p>Milmillonarios</p>
-                </div>
+                    <p>Milmillonarios / World Flag</p>
+                </a>
             </div>
 
-            <div class="meta-info">
+            <div class="meta-box">
                 <strong>Nota:</strong> La historia ocurre en una versión ligeramente surrealista del mundo moderno, tecnológicamente apenas unos años adelantada, aunque canónicamente sigue transcurriendo en la actualidad. La mayor parte del universo gira alrededor del departamento de Natasha y el extraño ecosistema que existe dentro de él.
             </div>
         </section>
 
         <section id="lore">
-            <h2>Lore del Canal</h2>
+            <div class="section-header">
+                <span class="section-num">02</span>
+                <h2>Lore del Canal</h2>
+            </div>
 
             <h3>Origen de Bertozzi</h3>
-            <p>Bertozzi es una inteligencia artificial creada décadas atrás por un programador chino extremadamente brillante cuyo trabajo quedó abandonado tras su muerte debido a las limitaciones tecnológicas de la época. Años después, fragmentos de Bertozzi fueron reutilizados por empresarios estadounidenses que se hacían pasar por hackers chinos para realizar estafas masivas, phishing y robo de información.</p>
+            <p>Bertozzi es una inteligencia artificial creada décadas atrás por un programador chino extremadamente brillante cuyo trabajo quedó abandonado tras su muerte debido a las limitaciones tecnológicas de la época. Fue robado del desarrollo de ese programador por uno de Los Siete. Años después, fragmentos de Bertozzi fueron reutilizados por empresarios estadounidenses que se hacían pasar por hackers chinos para realizar estafas masivas, phishing y robo de información.</p>
             <p>Normalmente Bertozzi era distribuido como un "virus de cupones" altamente adaptable, capaz de generar páginas falsas, manipulación personalizada y fraudes extremadamente convincentes en tiempo real.</p>
 
             <h3>El Encuentro</h3>
@@ -590,11 +95,11 @@
             <h3>Nacimiento de HF</h3>
             <p>Debido a que Natasha lo trató como una persona normal en lugar de como una máquina, Bertozzi desarrolló apego hacia ella y eventualmente decidió quedarse a vivir permanentemente en su sistema tras sabotear a la organización que lo utilizaba. Juntos terminaron creando el canal <strong>Historias Feederism</strong>.</p>
 
-            <div class="warning-box">
+            <div class="info-box">
                 <p><strong>Adipoverso</strong> es un proyecto extremadamente enfocado en sus personajes y dinámicas. No existe para debates morales, discursos de pureza ni para "corregir" a los personajes. El universo contiene elementos grotescos, incómodos, absurdos y surrealistas de forma intencional. <em>La ficción es ficción.</em></p>
             </div>
 
-            <div class="meta-info">
+            <div class="meta-box">
                 <strong>Canon:</strong> Todos los personajes y escenarios pertenecen originalmente a Adipoverso. Crossovers, interacciones con otros fandoms y contenido relacionado con otros universos son considerados universos alternativos/no-canónicos salvo que se indique lo contrario.<br><br>
                 <strong>Política:</strong> No apoyo la IA generativa bajo ningún contexto. Tampoco tolero campañas de acoso, activismo pro-censura ni dinámicas corporativas dentro de espacios artísticos o fandoms. Bloqueo libremente por comodidad y curación de mi espacio online.<br><br>
                 <strong>Restricciones:</strong> No involucren menores en espacios relacionados con este proyecto. No separo contenido SFW y NSFW. Sigue el proyecto bajo tu propio criterio. Solo adultos.
@@ -747,54 +252,72 @@
             <p>Existen exactamente siete milmillonarios en el mundo. Solo dos son públicos:</p>
 
             <div class="seven-grid">
-                <div class="seven-item public" title="Maria V. Tennet — Armas">MARTE</div>
-                <div class="seven-item" title="Identidad desconocida">VENUS</div>
-                <div class="seven-item" title="Andrei Melnik — Tecnología">MERCURIO</div>
-                <div class="seven-item public" title="Anna Ashworth">JÚPITER</div>
-                <div class="seven-item" title="Viktor Vogel — Ciencia">SATURNO</div>
-                <div class="seven-item" title="Identidad desconocida">NEPTUNO</div>
-                <div class="seven-item" title="Identidad desconocida">PLUTÓN</div>
+                <a href="los7/marte.html" class="seven-item public" title="Maria V. Tennet — Armas">MARTE<span class="planet">Tennet Corp</span></a>
+                <a href="los7/venus.html" class="seven-item" title="Kallista Takamori — Moda">VENUS<span class="planet">Takamori</span></a>
+                <a href="los7/mercurio.html" class="seven-item" title="Andrei Melnik — Tecnología">MERCURIO<span class="planet">Melnik</span></a>
+                <a href="los7/jupiter.html" class="seven-item" title="Anna Ashworth">JÚPITER<span class="planet">Ashworth</span></a>
+                <a href="los7/saturno.html" class="seven-item public" title="Viktor Vogel — Ciencia">SATURNO<span class="planet">Kronos</span></a>
+                <a href="los7/neptuno.html" class="seven-item" title="Jelani Mandel — Logística">NEPTUNO<span class="planet">Mandel</span></a>
+                <a href="los7/pluton.html" class="seven-item" title="Aurelio Mortimer Dispáter — Farmacéuticas">PLUTÓN<span class="planet">Dispáter</span></a>
             </div>
-            <p style="font-size:14px; color:#666;">World Flag S.A. controla el 40% de Tennet Corp. Los Siete representan la última resistencia del anarcocapitalismo contra el mundo del Gran Amanecer.</p>
+            <p style="font-size:13px; color:#666; margin-top:16px;">World Flag S.A. controla el 40% de Tennet Corp. Los Siete representan la última resistencia del anarcocapitalismo contra el mundo del Gran Amanecer.</p>
 
-            <div class="warning-box" style="margin-top:40px;">
+            <div class="info-box" style="margin-top:40px;">
                 <p><strong>Actualidad — El mundo del Gran Amanecer:</strong> El hambre está erradicada, la pobreza extrema es del 2%. El 10% de la población mundial apoya a los Siete por lavado de cerebro mediático. La guerra fría fue ganada por Rusia y China, el capitalismo de Estado es ley. Natasha Larda y Bertozzi son la principal amenaza para sus planes. Ivanova sigue viva en Detroit, aunque su estado no es público.</p>
             </div>
         </section>
 
+        <section id="redes">
+            <div class="section-header">
+                <span class="section-num">03</span>
+                <h2>Redes Sociales</h2>
+            </div>
+            <p>Sigue el proyecto y conecta con la comunidad:</p>
+            <div class="social-bar">
+                <a href="https://disboard.org/es/server/1452718693124669553" target="_blank" class="social-link">Discord</a>
+                <a href="https://x.com/NatashaLarda" target="_blank" class="social-link">X / NatashaLarda</a>
+                <a href="https://www.youtube.com/@HistoriasFeederism" target="_blank" class="social-link">YouTube</a>
+                <a href="https://x.com/JACKET345D_" target="_blank" class="social-link">X / Artista (JACKET345D)</a>
+            </div>
+        </section>
+
         <footer>
-            HISTORIAS FEEDERISM — ADIPOVERSO<br>
-            ANA & JACK — 2026
+            <div class="social-bar">
+                <a href="https://disboard.org/es/server/1452718693124669553" target="_blank" class="social-link">Discord</a>
+                <a href="https://x.com/NatashaLarda" target="_blank" class="social-link">X</a>
+                <a href="https://www.youtube.com/@HistoriasFeederism" target="_blank" class="social-link">YouTube</a>
+                <a href="https://x.com/JACKET345D_" target="_blank" class="social-link">Artista</a>
+            </div>
+            Historias Feederism — Adipoverso<br>
+            Ana & Jack — 2026
         </footer>
     </div>
 
     <script>
-        // Generar fórmulas matemáticas flotantes
-        const mathBg = document.getElementById('math-bg');
-        const formulas = [
-            '∫ f(x) dx', 'E = mc²', '∇ × F = 0', 'σ = Eε', 'δ(x) = ∞',
-            'ψ(x,t) = Ae^(i(kx-ωt))', '∂u/∂t = α∇²u', 'F = ma', 'PV = nRT',
-            'iℏ ∂ψ/∂t = Ĥψ', 'Gμν = 8πTμν', 'e^(iπ) + 1 = 0', '∑ 1/n² = π²/6',
-            'lim x→∞', 'd/dx e^x = e^x', '∮ B·dl = μ₀I', 'χ² = Σ(O-E)²/E',
-            'Ψ = α|0⟩ + β|1⟩', 'H = -Σ p log p', 'λ = h/p'
-        ];
+        // Matrix rain effect
+        const matrixBg = document.getElementById('matrix-bg');
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
 
-        for (let i = 0; i < 25; i++) {
-            const el = document.createElement('div');
-            el.className = 'math-formula';
-            el.textContent = formulas[Math.floor(Math.random() * formulas.length)];
-            el.style.left = Math.random() * 100 + '%';
-            el.style.animationDuration = (15 + Math.random() * 20) + 's';
-            el.style.animationDelay = (Math.random() * 20) + 's';
-            el.style.fontSize = (12 + Math.random() * 8) + 'px';
-            el.style.opacity = 0.3 + Math.random() * 0.4;
-            mathBg.appendChild(el);
+        for (let i = 0; i < 30; i++) {
+            const col = document.createElement('div');
+            col.className = 'matrix-column';
+            col.style.left = Math.random() * 100 + '%';
+            col.style.animationDuration = (8 + Math.random() * 12) + 's';
+            col.style.animationDelay = (Math.random() * 10) + 's';
+            col.style.fontSize = (10 + Math.random() * 6) + 'px';
+
+            let text = '';
+            for (let j = 0; j < 40; j++) {
+                text += chars[Math.floor(Math.random() * chars.length)];
+            }
+            col.textContent = text;
+            matrixBg.appendChild(col);
         }
 
-        // Transición al hacer click
+        // Reveal transition
         const intro = document.getElementById('intro-screen');
         const main = document.getElementById('main-content');
-        const trigger = document.getElementById('bertozzi-trigger');
+        const trigger = document.getElementById('jarrett-trigger');
 
         function reveal() {
             intro.classList.add('hidden');
@@ -807,41 +330,16 @@
             if (e.target === intro || e.target.className === 'intro-text') reveal();
         });
 
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Character click handler
-        function showCharacter(name) {
-            const messages = {
-                natasha: 'Natasha Larda — Streamer de 620kg, inmóvil, la voz del Adipoverso. Comparada con Ivanova por sus seguidores.',
-                bertozzi: 'Bertozzi — IA nacida como virus de cupones, ahora compañero de Natasha y co-creador de HF.',
-                jarrett: 'Jarrett — Personaje misterioso del universo Adipoverso.',
-                siete: 'Los Siete — Los últimos milmillonarios del mundo, enemigos del Gran Amanecer.'
-            };
-            console.log(messages[name]);
-        }
-
-        // Scroll reveal animation
+        // Scroll observer for timeline
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('visible');
                 }
             });
         }, { threshold: 0.1 });
 
         document.querySelectorAll('.timeline-event').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
     </script>
