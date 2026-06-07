@@ -738,3 +738,324 @@ footer .social-link:hover {
     .seven-grid { grid-template-columns: repeat(2, 1fr); }
     .cards-grid { grid-template-columns: 1fr; }
 }
+
+
+/* ===== INTRO V2: MATRIX PURO ===== */
+#intro-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--negro);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.8s;
+    overflow: hidden;
+}
+
+#intro-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.matrix-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0.12;
+    z-index: 1;
+}
+
+.matrix-column {
+    position: absolute;
+    top: -100%;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--blanco);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    animation: matrix-fall linear infinite;
+    user-select: none;
+    letter-spacing: 6px;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+@keyframes matrix-fall {
+    0% { transform: translateY(0); opacity: 0; }
+    5% { opacity: 0.8; }
+    95% { opacity: 0.8; }
+    100% { transform: translateY(120vh); opacity: 0; }
+}
+
+/* Grid de fondo */
+.intro-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Scanlines */
+.intro-scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.015) 2px,
+        rgba(255,255,255,0.015) 4px
+    );
+    z-index: 3;
+    pointer-events: none;
+    animation: scanline-move 8s linear infinite;
+}
+
+@keyframes scanline-move {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+}
+
+/* Vignette */
+.intro-vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* Contenido central */
+.intro-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+/* Título principal */
+.intro-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(28px, 6vw, 64px);
+    font-weight: 800;
+    color: var(--blanco);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.intro-title .line1 {
+    display: block;
+    animation: glitch-in 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
+
+.intro-title .line2 {
+    display: block;
+    color: var(--acento);
+    animation: glitch-in 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+}
+
+@keyframes glitch-in {
+    0% { 
+        opacity: 0; 
+        transform: translateX(-30px) skewX(-10deg);
+        clip-path: inset(0 100% 0 0);
+    }
+    20% {
+        opacity: 1;
+        clip-path: inset(0 80% 0 0);
+    }
+    40% {
+        clip-path: inset(0 20% 0 60%);
+        transform: translateX(5px) skewX(5deg);
+    }
+    60% {
+        clip-path: inset(0 50% 0 10%);
+    }
+    80% {
+        clip-path: inset(0 0% 0 0%);
+        transform: translateX(0) skewX(0);
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateX(0) skewX(0);
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+/* Subtítulo decorativo */
+.intro-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(10px, 1.2vw, 13px);
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-top: 20px;
+    animation: fade-up 1s ease 1.2s both;
+}
+
+/* Línea decorativa */
+.intro-line {
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--acento), transparent);
+    margin: 24px auto;
+    animation: line-expand 1.5s cubic-bezier(0.4, 0, 0.2, 1) 1.5s both;
+}
+
+@keyframes line-expand {
+    0% { width: 0; opacity: 0; }
+    50% { opacity: 1; }
+    100% { width: 280px; opacity: 0.6; }
+}
+
+/* Datos flotantes */
+.intro-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 2px;
+    margin-top: 16px;
+    animation: fade-up 1s ease 2s both;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.intro-data span {
+    position: relative;
+}
+
+.intro-data span::before {
+    content: '>';
+    margin-right: 6px;
+    color: var(--acento);
+    opacity: 0.5;
+}
+
+/* Botón de inicio */
+.intro-trigger {
+    margin-top: 48px;
+    padding: 16px 40px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fade-up 1s ease 2.5s both;
+}
+
+.intro-trigger::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transition: left 0.6s;
+}
+
+.intro-trigger:hover {
+    border-color: rgba(255,255,255,0.4);
+    color: var(--blanco);
+    letter-spacing: 6px;
+    background: rgba(255,255,255,0.03);
+}
+
+.intro-trigger:hover::before {
+    left: 100%;
+}
+
+/* Cursor parpadeante en el botón */
+.intro-trigger .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--acento);
+    margin-left: 8px;
+    animation: cursor-blink 1s step-end infinite;
+    vertical-align: middle;
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Partículas flotantes */
+.intro-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: particle-float linear infinite;
+}
+
+@keyframes particle-float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; transform: translateY(90vh) scale(1); }
+    90% { opacity: 1; transform: translateY(10vh) scale(1); }
+    100% { transform: translateY(0) scale(0); opacity: 0; }
+}
+
+/* Animación fade-up general */
+@keyframes fade-up {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Glitch text effect adicional */
+.glitch-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity:0;
+}

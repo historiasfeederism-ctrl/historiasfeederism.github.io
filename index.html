@@ -8,13 +8,30 @@
 </head>
 <body>
 
-    <!-- INTRO SCREEN -->
+    <!-- INTRO SCREEN V2 -->
     <div id="intro-screen">
         <div class="matrix-bg" id="matrix-bg"></div>
-        <div class="jarrett-intro" id="jarrett-trigger">
-            <img src="Dise%C3%B1o%20sin%20t%C3%ADtulo.png" alt="Jarrett">
+        <div class="intro-grid"></div>
+        <div class="intro-scanlines"></div>
+        <div class="intro-vignette"></div>
+        <div class="intro-particles" id="intro-particles"></div>
+
+        <div class="intro-content">
+            <h1 class="intro-title">
+                <span class="line1">Historias</span>
+                <span class="line2">Feederism</span>
+            </h1>
+            <div class="intro-subtitle">Adipoverso / Universo Narrativo</div>
+            <div class="intro-line"></div>
+            <div class="intro-data">
+                <span>SYS.INIT</span>
+                <span>v2.0.26</span>
+                <span>HF.ONLINE</span>
+            </div>
+            <button class="intro-trigger" id="intro-trigger">
+                [ Click para iniciar ]<span class="cursor"></span>
+            </button>
         </div>
-        <div class="intro-text">[ Click para acceder ]</div>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -294,14 +311,12 @@
     </div>
 
     <script>
-        // ===== INTRO LOGIC WITH HISTORY FIX =====
+        // ===== INTRO V2: MATRIX + PARTICLES =====
         const intro = document.getElementById('intro-screen');
         const main = document.getElementById('main-content');
-        const trigger = document.getElementById('jarrett-trigger');
+        const trigger = document.getElementById('intro-trigger');
         const INTRO_KEY = 'hf_intro_seen';
 
-        // Check if user already saw intro this session (using sessionStorage)
-        // or if they came back via back button (URL hash)
         function shouldSkipIntro() {
             return sessionStorage.getItem(INTRO_KEY) === 'true' || window.location.hash === '#main';
         }
@@ -311,13 +326,11 @@
             main.classList.add('visible');
             document.body.style.overflow = 'auto';
             sessionStorage.setItem(INTRO_KEY, 'true');
-            // Replace state so back button doesn't bring back intro
             if (history.replaceState) {
                 history.replaceState({introSkipped: true}, '', window.location.pathname + '#main');
             }
         }
 
-        // Skip intro if already seen
         if (shouldSkipIntro()) {
             intro.style.display = 'none';
             main.style.opacity = '1';
@@ -326,30 +339,43 @@
         } else {
             trigger.addEventListener('click', reveal);
             intro.addEventListener('click', (e) => {
-                if (e.target === intro || e.target.className === 'intro-text') reveal();
+                if (e.target === intro || e.target.closest('.intro-content')) reveal();
             });
         }
 
-        // Matrix rain effect
+        // Matrix rain
         const matrixBg = document.getElementById('matrix-bg');
         const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
 
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 40; i++) {
             const col = document.createElement('div');
             col.className = 'matrix-column';
             col.style.left = Math.random() * 100 + '%';
-            col.style.animationDuration = (8 + Math.random() * 12) + 's';
-            col.style.animationDelay = (Math.random() * 10) + 's';
-            col.style.fontSize = (10 + Math.random() * 6) + 'px';
+            col.style.animationDuration = (6 + Math.random() * 14) + 's';
+            col.style.animationDelay = (Math.random() * 8) + 's';
+            col.style.fontSize = (9 + Math.random() * 8) + 'px';
             let text = '';
-            for (let j = 0; j < 40; j++) {
+            for (let j = 0; j < 50; j++) {
                 text += chars[Math.floor(Math.random() * chars.length)];
             }
             col.textContent = text;
             matrixBg.appendChild(col);
         }
 
-        // Smooth scroll for nav links
+        // Floating particles
+        const particlesContainer = document.getElementById('intro-particles');
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDuration = (10 + Math.random() * 20) + 's';
+            p.style.animationDelay = (Math.random() * 10) + 's';
+            p.style.width = (1 + Math.random() * 3) + 'px';
+            p.style.height = p.style.width;
+            particlesContainer.appendChild(p);
+        }
+
+        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -359,7 +385,7 @@
             });
         });
 
-        // Scroll observer for timeline
+        // Scroll observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
